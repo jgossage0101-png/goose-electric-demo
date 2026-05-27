@@ -69,7 +69,7 @@ const whyPoints = [
   { icon: MapPin, title: "Local to Baltimore County", desc: "Born and raised right here. We know the neighborhoods we serve." },
   { icon: Users, title: "Family-Built Company", desc: "Two brothers building something dependable for our community." },
   { icon: MessageSquare, title: "Clear Communication", desc: "Plain talk, honest timelines, no jargon and no surprises." },
-  { icon: HandshakeIcon, title: "Fair, Straightforward Service", desc: "Straight pricing and respectful work, every visit." },
+  { icon: Handshake, title: "Fair, Straightforward Service", desc: "Straight pricing and respectful work, every visit." },
 ];
 
 const areas = [
@@ -535,7 +535,7 @@ function About() {
               {[
                 { icon: ShieldCheck, label: "Respectful work" },
                 { icon: MessageSquare, label: "Clear updates" },
-                { icon: HandshakeIcon, label: "Fair pricing" },
+                { icon: Handshake, label: "Fair pricing" },
                 { icon: MapPin, label: "Truly local" },
               ].map((t) => (
                 <div
