@@ -8,7 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { SectionHeader } from "@/components/section-header";
-import { faqs } from "@/lib/site-data";
+import { businessContact, faqs } from "@/lib/site-data";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -70,6 +70,19 @@ function CallbackForm() {
   function onSubmit(ev: React.FormEvent) {
     ev.preventDefault();
     if (!validate()) return;
+
+    const subject = `Goose Electric callback request from ${form.name.trim()}`;
+    const body = [
+      `Name: ${form.name.trim()}`,
+      `Phone: ${form.phone.trim()}`,
+      form.email ? `Email: ${form.email.trim()}` : "Email: not provided",
+      form.city ? `City / neighborhood: ${form.city.trim()}` : "City / neighborhood: not provided",
+      `Need help with: ${form.need.trim()}`,
+      `Preferred contact: ${form.contact}`,
+      form.details ? `Details: ${form.details.trim()}` : "Details: none provided",
+    ].join("\n");
+
+    window.location.href = `mailto:${businessContact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
     setSubmitted(true);
   }
 
@@ -86,9 +99,9 @@ function CallbackForm() {
             />
             <div className="mt-8 space-y-4">
               {[
-                { icon: Phone, label: "Phone", value: "(410) 555-0142" },
-                { icon: Mail, label: "Email", value: "hello@gooseelectric.com" },
-                { icon: MapPin, label: "Based In", value: "Dundalk, Baltimore County, MD" },
+                { icon: Phone, label: "Phone", value: businessContact.phone, href: businessContact.phoneHref },
+                { icon: Mail, label: "Email", value: businessContact.email, href: businessContact.emailHref },
+                { icon: MapPin, label: "Based In", value: businessContact.city, href: "" },
               ].map((c) => (
                 <div key={c.label} className="flex items-start gap-4 rounded-xl border border-border bg-card p-4">
                   <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary text-primary-foreground">
@@ -96,7 +109,11 @@ function CallbackForm() {
                   </span>
                   <div>
                     <div className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{c.label}</div>
-                    <div className="text-sm font-bold text-primary">{c.value}</div>
+                    {c.href ? (
+                      <a href={c.href} className="text-sm font-bold text-primary hover:text-secondary">{c.value}</a>
+                    ) : (
+                      <div className="text-sm font-bold text-primary">{c.value}</div>
+                    )}
                   </div>
                 </div>
               ))}

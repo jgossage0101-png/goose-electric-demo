@@ -74,11 +74,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Goose Electric — Residential Electrician in Dundalk & Baltimore County" },
+      { title: "Goose Electric — Residential Electrical Service in Dundalk & Baltimore County" },
       {
         name: "description",
         content:
-          "Local family-built residential electrical service in Dundalk and Baltimore County. Outlets, fixtures, ceiling fans, troubleshooting and more. Request a callback today.",
+          "Goose Electric is a local residential electrical service company serving Dundalk, Essex, Middle River, Sparrows Point, Edgemere, and nearby Baltimore County communities.",
       },
       { name: "author", content: "Goose Electric" },
       { property: "og:title", content: "Goose Electric — Local Residential Electrician" },

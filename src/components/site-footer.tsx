@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { Facebook, Instagram, Phone, Mail, MapPin, Zap } from "lucide-react";
-import { navLinks } from "@/lib/site-data";
+import { businessContact, navLinks } from "@/lib/site-data";
 import logo from "@/assets/goose-logo.jpeg";
 
 export function SiteFooter() {
@@ -36,13 +36,15 @@ export function SiteFooter() {
             <div className="text-xs font-bold uppercase tracking-wider text-secondary">Contact</div>
             <ul className="mt-4 space-y-3 text-sm text-white/75">
               <li className="flex items-center gap-2">
-                <Phone className="h-4 w-4 text-secondary" />(410) 555-0142
+                <Phone className="h-4 w-4 text-secondary" />
+                <a href={businessContact.phoneHref} className="hover:text-secondary">{businessContact.phone}</a>
               </li>
               <li className="flex items-center gap-2">
-                <Mail className="h-4 w-4 text-secondary" />hello@gooseelectric.com
+                <Mail className="h-4 w-4 text-secondary" />
+                <a href={businessContact.emailHref} className="hover:text-secondary">{businessContact.email}</a>
               </li>
               <li className="flex items-center gap-2">
-                <MapPin className="h-4 w-4 text-secondary" />Dundalk, MD
+                <MapPin className="h-4 w-4 text-secondary" />{businessContact.city}
               </li>
             </ul>
           </div>
