@@ -45,6 +45,8 @@ type ServicePhoto = {
   employeeId?: string;
 };
 
+const ALLOWED_EMPLOYEE_IDS = ["05192005", "05052007"];
+
 function fileToDataUrl(file: File) {
   return new Promise<string>((resolve, reject) => {
     const reader = new FileReader();
@@ -128,6 +130,11 @@ function ServiceGalleryPage() {
       return;
     }
 
+    if (!ALLOWED_EMPLOYEE_IDS.includes(employeeId.trim())) {
+      setEmployeeError(`Employee ID "${employeeId}" is not authorized to upload photos. Only authorized employees can add to the gallery.`);
+      return;
+    }
+
     try {
       const srcs = await Promise.all(files.map((file) => fileToDataUrl(file)));
       const uploaded = srcs.map((src, index) => ({
@@ -152,6 +159,11 @@ function ServiceGalleryPage() {
   const handleAdminUpload = () => {
     if (!employeeId.trim()) {
       setUploadError("Employee ID is required.");
+      return;
+    }
+
+    if (!ALLOWED_EMPLOYEE_IDS.includes(employeeId.trim())) {
+      setEmployeeError(`Employee ID "${employeeId}" is not authorized to upload photos.`);
       return;
     }
 
