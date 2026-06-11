@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, type FormEvent, type ReactNode } from "react";
 import { PhoneCall, Phone, Mail, MapPin, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -40,6 +40,8 @@ function ContactPage() {
 
 function CallbackForm() {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
   const [form, setForm] = useState({
     name: "",
     phone: "",
@@ -67,24 +69,44 @@ function CallbackForm() {
     return Object.keys(e).length === 0;
   }
 
-  function onSubmit(ev: React.FormEvent) {
-    ev.preventDefault();
-    if (!validate()) return;
+  async function onSubmit(ev: FormEvent<HTMLFormElement>) {
+  ev.preventDefault();
+  setSubmitError("");
 
-    const subject = `Goose Electric callback request from ${form.name.trim()}`;
-    const body = [
-      `Name: ${form.name.trim()}`,
-      `Phone: ${form.phone.trim()}`,
-      form.email ? `Email: ${form.email.trim()}` : "Email: not provided",
-      form.city ? `City / neighborhood: ${form.city.trim()}` : "City / neighborhood: not provided",
-      `Need help with: ${form.need.trim()}`,
-      `Preferred contact: ${form.contact}`,
-      form.details ? `Details: ${form.details.trim()}` : "Details: none provided",
-    ].join("\n");
+  if (!validate()) return;
 
-    window.location.href = `mailto:${businessContact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  setSubmitting(true);
+
+  try {
+    const response = await fetch("https://formspree.io/f/xqejnaej", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+      body: JSON.stringify({
+        _subject: `Goose Electric callback request from ${form.name.trim()}`,
+        name: form.name.trim(),
+        phone: form.phone.trim(),
+        email: form.email.trim() || "Not provided",
+        city: form.city.trim() || "Not provided",
+        need: form.need.trim(),
+        preferredContact: form.contact,
+        details: form.details.trim() || "None provided",
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Form submission failed");
+    }
+
     setSubmitted(true);
+  } catch {
+    setSubmitError("Something went wrong. Please try again or contact us directly.");
+  } finally {
+    setSubmitting(false);
   }
+}
 
   return (
     <section className="bg-background py-20 sm:py-24">
@@ -142,8 +164,13 @@ function CallbackForm() {
                   </Button>
                 </div>
               ) : (
-                <form onSubmit={onSubmit} noValidate className="space-y-5">
-                  <div className="grid gap-5 sm:grid-cols-2">
+<form onSubmit={onSubmit} noValidate className="space-y-5">
+                  {submitError && (
+                    <div className="rounded-md bg-destructive/10 p-4 text-sm text-destructive">
+                      {submitError}
+                    </div>
+                  )}
+                      <div className="grid gap-5 sm:grid-cols-2">
                     <Field label="Name" required error={errors.name}
                       input={<Input value={form.name} onChange={(e) => update("name", e.target.value)} placeholder="Your full name" />} />
                     <Field label="Phone number" required error={errors.phone}
@@ -175,10 +202,23 @@ function CallbackForm() {
                   <Field label="Additional details"
                     input={<Textarea value={form.details} rows={4} onChange={(e) => update("details", e.target.value)} placeholder="Anything else that would help us understand your project." />} />
 
-                  <Button type="submit" size="lg" className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90">
-                    <PhoneCall className="mr-2 h-4 w-4" /> Request a Callback
-                  </Button>
-                  <p className="text-center text-xs text-muted-foreground">We respect your time. No spam, no pressure.</p>
+                  {submitError && (
+  <p className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm font-medium text-destructive">
+    {submitError}
+  </p>
+)}
+
+<Button
+  type="submit"
+  size="lg"
+  disabled={submitting}
+  className="w-full bg-secondary text-secondary-foreground hover:bg-secondary/90"
+>
+  <PhoneCall className="mr-2 h-4 w-4" />
+  {submitting ? "Sending..." : "Request a Callback"}
+</Button>
+
+<p className="text-center text-xs text-muted-foreground">We respect your time. No spam, no pressure.</p>
                 </form>
               )}
             </div>
@@ -196,7 +236,7 @@ function Field({
   error,
 }: {
   label: string;
-  input: React.ReactNode;
+  input: ReactNode;
   required?: boolean;
   error?: string;
 }) {
