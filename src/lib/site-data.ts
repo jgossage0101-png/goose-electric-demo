@@ -24,8 +24,8 @@ export const businessContact = {
   name: "Goose Electric",
   phone: "(443) 418-1182",
   phoneHref: "tel:+14434181182",
-  email: "Gooseelectricmd@gmail.com",
-  emailHref: "mailto:Gooseelectricmd@gmail.com",
+  email: "Support@gooseelectric.com",
+  emailHref: "mailto:Support@gooseelectric.com",
   city: "Dundalk, Baltimore County, MD",
   serviceArea: "Dundalk, Essex, Sparrows Point, Middle River, Edgemere, and nearby Baltimore County communities",
 };

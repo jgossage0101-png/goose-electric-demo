@@ -13,7 +13,7 @@ import {
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 
-const Form = FormProvider;
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xqejnaej";
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
